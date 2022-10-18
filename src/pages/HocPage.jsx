@@ -1,6 +1,6 @@
 import React from "react";
-import { LifeCycle } from "../components/LifeCycle";
-import { withClickCounter } from "../hoc/withClickCounter";
+import LifeCycle from "@components/LifeCycle";
+import { withClickCounter } from "@hoc/withClickCounter";
 
 const HocPage = () => {
   const NewClicker = withClickCounter(LifeCycle);

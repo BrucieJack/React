@@ -22,9 +22,11 @@ class LifeCycle extends React.Component {
   }
 
   handleIncrement() {
-    this.setState({
-      counter: this.state.counter + 1,
-    });
+    if (this.state.counter !== 3) {
+      this.setState({
+        counter: this.state.counter + 1,
+      });
+    }
   }
 
   componentDidMount() {
@@ -32,7 +34,6 @@ class LifeCycle extends React.Component {
   }
 
   componentDidUpdate(previousProps, previousState, snapshot) {
-    console.log();
     if (previousState.color !== "green") {
       this.changeColor("green");
     }
@@ -47,7 +48,6 @@ class LifeCycle extends React.Component {
   }
 
   getSnapshotBeforeUpdate(previousProps, previousState) {
-    console.log(previousState.ref.current);
     return previousState.ref.current;
   }
 
@@ -64,4 +64,4 @@ class LifeCycle extends React.Component {
   }
 }
 
-export { LifeCycle };
+export default LifeCycle;
