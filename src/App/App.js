@@ -5,7 +5,7 @@ import { ContextPage } from "@pages/ContextPage";
 import { HocPage } from "@pages/HocPage";
 import { Home } from "@pages/Home";
 import { LifeCyclePage } from "@pages/LifeCyclePage";
-import { RickAndMorty } from "../pages/RickAndMorty";
+import { RickAndMorty } from "@pages/RickAndMorty";
 
 function App() {
   return (
