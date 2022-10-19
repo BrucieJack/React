@@ -6,6 +6,7 @@ module.exports = function override(config) {
     "@assets": "src/assets",
     "@hoc": "src/hoc",
     "@pages": "src/pages",
+    "@store": "src/store",
   })(config);
 
   return config;

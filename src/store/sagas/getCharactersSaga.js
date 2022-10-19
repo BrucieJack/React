@@ -15,6 +15,6 @@ export default function* putData() {
   } catch (error) {}
 }
 
-export function* watchLoad() {
+export function* watchLoadCharacters() {
   yield takeEvery("GET_CHARACTERS", putData);
 }
