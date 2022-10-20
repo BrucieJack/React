@@ -6,7 +6,7 @@ export default function BasicButtons(props) {
   return (
     <Stack spacing={2} direction="row">
       <Button variant="outlined" onClick={props.handleClick}>
-        {props.contentType === "episodes" ? "Characters" : `Episodes`}
+        {props.contentType}
       </Button>
     </Stack>
   );

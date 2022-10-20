@@ -3,27 +3,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCharacters } from "../../store/actions/characters";
 import { getEpisodes } from "../../store/actions/episodes";
 import ChoiceButtons from "./components/ChoiceButtons";
-import EpisodesTable from "./components/EpisodesTable";
-import CharactersTable from "./components/CharactersTable";
+import Table from "./components/Table";
 import { useMemo } from "react";
 
 function createData(data) {
-  console.log(data);
   return { episodes: data.episodes, characters: data.characters };
 }
 
 export const RickAndMorty = () => {
   const dispatch = useDispatch();
   const data = useSelector((state) => state);
-  const [contentType, setContentType] = useState("episodes");
+  const [contentType, setContentType] = useState("Episodes");
 
   const memoData = useMemo(() => createData(data), [data]);
 
   const handleClick = () => {
-    if (contentType === "episodes") {
-      setContentType("characters");
+    if (contentType === "Episodes") {
+      setContentType("Characters");
     } else {
-      setContentType("episodes");
+      setContentType("Episodes");
     }
   };
 
@@ -35,7 +33,11 @@ export const RickAndMorty = () => {
   return (
     <div>
       <ChoiceButtons handleClick={handleClick} contentType={contentType} />
-      {contentType === "episodes" ? <EpisodesTable episodes={memoData.episodes} /> : <CharactersTable characters={memoData.characters} />}
+      {contentType === "Episodes" ? (
+        <Table data={memoData.episodes} contentType={contentType} />
+      ) : (
+        <Table data={memoData.characters} contentType={contentType} />
+      )}
     </div>
   );
 };
