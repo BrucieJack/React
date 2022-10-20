@@ -5,10 +5,5 @@ import watchLoadEpisodes from "./getEpisodesSaga";
 import watchLoadEpisode from "./getEpisodeByIdSaga";
 
 export default function* rootSaga() {
-  yield all([
-    watchLoadCharacters(),
-    watchLoadEpisodes(),
-    watchLoadCharacter(),
-    watchLoadEpisode(),
-  ]);
+  yield all([watchLoadCharacters(), watchLoadEpisodes(), watchLoadCharacter(), watchLoadEpisode()]);
 }

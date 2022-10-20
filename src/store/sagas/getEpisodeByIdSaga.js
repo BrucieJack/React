@@ -9,10 +9,9 @@ export const getEpisodeById = (id) => {
   });
 };
 
-export default function* putData(action) {
+function* putData(action) {
   try {
-    // console.log(action);
-    const action = yield take("GET_EPISODE_BY_ID");
+    console.log(action);
     const episode = yield call(getEpisodeById, action.payload);
     yield put(putEpisode(episode));
   } catch (error) {
@@ -20,6 +19,6 @@ export default function* putData(action) {
   }
 }
 
-export function* watchLoadEpisode() {
+export default function* watchLoadEpisode() {
   yield takeLatest("GET_EPISODE_BY_ID", putData);
 }

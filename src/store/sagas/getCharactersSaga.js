@@ -9,7 +9,7 @@ export const getAllCharacters = () => {
   });
 };
 
-export default function* putData() {
+function* putData() {
   try {
     const characters = yield call(getAllCharacters);
     yield put(putCharacters(characters));
@@ -18,6 +18,6 @@ export default function* putData() {
   }
 }
 
-export function* watchLoadCharacters() {
+export default function* watchLoadCharacters() {
   yield takeEvery("GET_CHARACTERS", putData);
 }

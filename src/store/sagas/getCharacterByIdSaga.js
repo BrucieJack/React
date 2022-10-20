@@ -9,9 +9,8 @@ export const getCharacterById = (id) => {
   });
 };
 
-export default function* putData(action) {
+function* putData(action) {
   try {
-    const action = yield take("GET_CHARACTER_BY_ID");
     console.log(action);
     const character = yield call(getCharacterById, action.payload);
     yield put(putCharacter(character));
@@ -20,6 +19,6 @@ export default function* putData(action) {
   }
 }
 
-export function* watchLoadCharacter() {
+export default function* watchLoadCharacter() {
   yield takeLatest("GET_CHARACTER_BY_ID", putData);
 }

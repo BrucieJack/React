@@ -9,7 +9,7 @@ export const getAllEpisodes = () => {
   });
 };
 
-export default function* putData() {
+function* putData() {
   try {
     const episodes = yield call(getAllEpisodes);
     yield put(putEpisodes(episodes));
@@ -18,6 +18,6 @@ export default function* putData() {
   }
 }
 
-export function* watchLoadEpisodes() {
+export default function* watchLoadEpisodes() {
   yield takeEvery("GET_EPISODES", putData);
 }
