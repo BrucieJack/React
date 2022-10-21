@@ -1,17 +1,17 @@
 import axios from "axios";
 import { call, takeEvery, put } from "redux-saga/effects";
 import { putEpisodes } from "../actions/episodes";
-import { allEpisodes } from "@constants/url";
+import { rickAndMorty } from "@constants/url";
 
-export const getAllEpisodes = () => {
-  return axios.get(allEpisodes).then((res) => {
+export const getAllEpisodes = (page) => {
+  return axios.get(rickAndMorty + `/episode/?page=${page}`).then((res) => {
     return res.data.results;
   });
 };
 
-function* putData() {
+function* putData(action) {
   try {
-    const episodes = yield call(getAllEpisodes);
+    const episodes = yield call(getAllEpisodes, action.payload);
     yield put(putEpisodes(episodes));
   } catch (error) {
     console.log(error);
