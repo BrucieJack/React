@@ -1,4 +1,7 @@
-export const getCharacters = () => ({ type: "GET_CHARACTERS" });
+export const getCharacters = (page) => ({
+  type: "GET_CHARACTERS",
+  payload: page,
+});
 
 export const getCharacterById = (id) => ({
   type: "GET_CHARACTER_BY_ID",

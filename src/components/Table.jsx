@@ -10,27 +10,30 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
+import { styled } from "@mui/material/styles";
+import Grid from "@mui/material/Unstable_Grid2";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { episodeModal, characterModal } from "@configs/modalConfig";
 import { useDispatch, useSelector } from "react-redux";
-import { getCharacterById } from "../../../store/actions/characters";
-import { getEpisodeById } from "../../../store/actions/episodes";
-import {
-  episodesCategories,
-  charactersCategories,
-} from "@constants/categories";
+import { getCharacterById } from "@store/actions/characters";
+import { getEpisodeById } from "@store/actions/episodes";
+import BasicModal from "@components/BasicModal";
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
 function Row(props) {
   const { row } = props;
-  const [open, setOpen] = React.useState(false);
-  const titles =
-    props.contentType === "Episodes"
-      ? episodesCategories
-      : charactersCategories;
+  const [open, setOpen] = React.useState();
   const dispatch = useDispatch();
   const data = useSelector((state) => state);
-
   const handleRowClick = () => {
+    props.handleClick(props.id);
     setOpen(!open);
     if (props.contentType === "Episodes") {
       dispatch(getEpisodeById(row.id));
@@ -38,7 +41,11 @@ function Row(props) {
       dispatch(getCharacterById(row.id));
     }
   };
-
+  React.useEffect(() => {
+    if (props.active !== props.id) {
+      setOpen(false);
+    }
+  }, [props.active]);
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
@@ -67,9 +74,12 @@ function Row(props) {
                 <TableHead>
                   <TableRow>
                     <TableCell></TableCell>
-                    {titles.map((title, index) => (
+                    {props.contentType === "Characters" && (
+                      <TableCell align="center">Image</TableCell>
+                    )}
+                    {props.tableInfo.map((item, index) => (
                       <TableCell align="center" key={index}>
-                        {title}
+                        {item.title}
                       </TableCell>
                     ))}
                   </TableRow>
@@ -91,21 +101,50 @@ function Row(props) {
                         />
                       </TableCell>
                     )}
-
-                    <TableCell align="center">
-                      {props.contentType === "Characters"
-                        ? data.character.status
-                        : data.episode.air_date}
-                    </TableCell>
-                    <TableCell align="center">
-                      {}
-                      {props.contentType === "Characters"
-                        ? data.character.species
-                        : data.episode.episode}
-                    </TableCell>
+                    {props.tableInfo.map((item, index) => (
+                      <TableCell align="center" key={index}>
+                        {
+                          // eslint-disable-next-line
+                          eval(item.data)
+                        }
+                      </TableCell>
+                    ))}
                   </TableRow>
                 </TableBody>
               </Table>
+              <Typography variant="h6" gutterBottom component="div">
+                {props.contentType === "Episodes" ? "Characters" : "Episodes"}
+              </Typography>
+              <Grid
+                container
+                rowSpacing={1}
+                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+              >
+                {props.contentType === "Episodes"
+                  ? row.characters.map((item, index) => (
+                      <Grid key={index} xs={6}>
+                        <Item>
+                          <BasicModal
+                            data={item.split("/").pop()}
+                            componentType={props.contentType}
+                            config={characterModal}
+                          />
+                        </Item>
+                      </Grid>
+                    ))
+                  : row.episode.map((item, index) => (
+                      <Grid key={index} xs={6}>
+                        <Item>
+                          <BasicModal
+                            data={item.split("/").pop()}
+                            componentType={props.contentType}
+                            config={episodeModal}
+                          />
+                        </Item>
+                      </Grid>
+                    ))}
+                {}
+              </Grid>
             </Box>
           </Collapse>
         </TableCell>
@@ -115,6 +154,10 @@ function Row(props) {
 }
 
 export default function CollapsibleTable(props) {
+  const [activeId, setActiveId] = React.useState(null);
+  const handleClick = (id) => {
+    setActiveId(id);
+  };
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -128,7 +171,15 @@ export default function CollapsibleTable(props) {
         </TableHead>
         <TableBody>
           {props.data.map((row) => (
-            <Row key={row.id} row={row} contentType={props.contentType} />
+            <Row
+              id={row.id}
+              key={row.id}
+              row={row}
+              active={activeId}
+              contentType={props.contentType}
+              tableInfo={props.tableInfo}
+              handleClick={handleClick}
+            />
           ))}
         </TableBody>
       </Table>

@@ -1,17 +1,16 @@
 import axios from "axios";
-import { call, takeEvery, put, take, takeLatest } from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
 import { putCharacter } from "../actions/characters";
-import { allCharacters } from "@constants/url";
+import { rickAndMorty } from "@constants/url";
 
 export const getCharacterById = (id) => {
-  return axios.get(allCharacters + "/" + id).then((res) => {
+  return axios.get(rickAndMorty + "/character/" + id).then((res) => {
     return res.data;
   });
 };
 
 function* putData(action) {
   try {
-    console.log(action);
     const character = yield call(getCharacterById, action.payload);
     yield put(putCharacter(character));
   } catch (error) {

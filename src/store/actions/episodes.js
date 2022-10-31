@@ -1,4 +1,4 @@
-export const getEpisodes = () => ({ type: "GET_EPISODES" });
+export const getEpisodes = (page) => ({ type: "GET_EPISODES", payload: page });
 
 export const putEpisodes = (data) => ({ type: "PUT_EPISODES", payload: data });
 
