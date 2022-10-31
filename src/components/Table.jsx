@@ -14,10 +14,8 @@ import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { episodeModal, characterModal } from "@configs/modalConfig";
-import { useDispatch, useSelector } from "react-redux";
-import { getCharacterById } from "@store/actions/characters";
-import { getEpisodeById } from "@store/actions/episodes";
+import { useSelector } from "react-redux";
+
 import BasicModal from "@components/BasicModal";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -30,22 +28,19 @@ const Item = styled(Paper)(({ theme }) => ({
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState();
-  const dispatch = useDispatch();
   const data = useSelector((state) => state);
   const handleRowClick = () => {
-    props.handleClick(props.id);
+    props.handleClick(row.id);
     setOpen(!open);
-    if (props.contentType === "Episodes") {
-      dispatch(getEpisodeById(row.id));
-    } else {
-      dispatch(getCharacterById(row.id));
-    }
+    props.handleDispatch(props.id);
   };
+
   React.useEffect(() => {
     if (props.active !== props.id) {
       setOpen(false);
     }
   }, [props.active]);
+
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
@@ -74,9 +69,6 @@ function Row(props) {
                 <TableHead>
                   <TableRow>
                     <TableCell></TableCell>
-                    {props.contentType === "Characters" && (
-                      <TableCell align="center">Image</TableCell>
-                    )}
                     {props.tableInfo.map((item, index) => (
                       <TableCell align="center" key={index}>
                         {item.title}
@@ -87,20 +79,7 @@ function Row(props) {
                 <TableBody>
                   <TableRow>
                     <TableCell component="th" scope="row"></TableCell>
-                    {props.contentType === "Characters" && (
-                      <TableCell align="center">
-                        <Box
-                          component="img"
-                          sx={{
-                            height: 300,
-                            width: 300,
-                            maxHeight: { xs: 270, md: 300 },
-                            maxWidth: { xs: 350, md: 300 },
-                          }}
-                          src={data.character.image}
-                        />
-                      </TableCell>
-                    )}
+
                     {props.tableInfo.map((item, index) => (
                       <TableCell align="center" key={index}>
                         {
@@ -112,38 +91,22 @@ function Row(props) {
                   </TableRow>
                 </TableBody>
               </Table>
-              <Typography variant="h6" gutterBottom component="div">
-                {props.contentType === "Episodes" ? "Characters" : "Episodes"}
-              </Typography>
               <Grid
                 container
                 rowSpacing={1}
                 columnSpacing={{ xs: 1, sm: 2, md: 3 }}
               >
-                {props.contentType === "Episodes"
-                  ? row.characters.map((item, index) => (
-                      <Grid key={index} xs={6}>
-                        <Item>
-                          <BasicModal
-                            data={item.split("/").pop()}
-                            componentType={props.contentType}
-                            config={characterModal}
-                          />
-                        </Item>
-                      </Grid>
-                    ))
-                  : row.episode.map((item, index) => (
-                      <Grid key={index} xs={6}>
-                        <Item>
-                          <BasicModal
-                            data={item.split("/").pop()}
-                            componentType={props.contentType}
-                            config={episodeModal}
-                          />
-                        </Item>
-                      </Grid>
-                    ))}
-                {}
+                {props.modalData.map((item, index) => (
+                  <Grid key={index} xs={6}>
+                    <Item>
+                      <BasicModal
+                        data={item.split("/").pop()}
+                        componentType={props.contentType}
+                        config={props.modalConfig}
+                      />
+                    </Item>
+                  </Grid>
+                ))}
               </Grid>
             </Box>
           </Collapse>
@@ -175,10 +138,13 @@ export default function CollapsibleTable(props) {
               id={row.id}
               key={row.id}
               row={row}
+              modalData={props.modal(row)} //KEK
               active={activeId}
               contentType={props.contentType}
               tableInfo={props.tableInfo}
               handleClick={handleClick}
+              handleDispatch={props.handleDispatch}
+              modalConfig={props.modalConfig}
             />
           ))}
         </TableBody>

@@ -35,11 +35,7 @@ export default function BasicModal(props) {
 
   return (
     <div>
-      <Button onClick={handleOpen}>
-        {props.componentType === "Episodes"
-          ? "Посмотреть персонажа"
-          : "Посмотреть эпизод"}
-      </Button>
+      <Button onClick={handleOpen}>Просмотреть</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -48,7 +44,7 @@ export default function BasicModal(props) {
       >
         <Box sx={style}>
           {props.config.map((item) => (
-            <Typography id={item.id}>
+            <Typography key={item.id} id={item.id}>
               {
                 // eslint-disable-next-line
                 eval(item.data)
